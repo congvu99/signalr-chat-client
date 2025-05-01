@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import connection from './signalrConnection';
 
-function App() {
+const App: React.FC = () => {
+  const [connectionStatus, setConnectionStatus] = useState<string>('Đang kết nối...');
+
+  useEffect(() => {
+    connection
+      .start()
+      .then(() => {
+        console.log('Đã kết nối thành công đến Hub!');
+        setConnectionStatus('Kết nối thành công');
+      })
+      .catch((err) => {
+        console.error('Kết nối thất bại:', err);
+        setConnectionStatus('Kết nối thất bại');
+      });
+
+    return () => {
+      connection.stop();
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: 24 }}>
+      <p>Trạng thái kết nối: {connectionStatus}</p>
     </div>
   );
-}
+};
 
 export default App;
