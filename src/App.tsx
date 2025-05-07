@@ -4,21 +4,15 @@ import connection from './signalrConnection';
 const App: React.FC = () => {
   const [connectionStatus, setConnectionStatus] = useState<string>('Đang kết nối...');
 
-  useEffect(() => {
-    connection
-      .start()
-      .then(() => {
-        console.log('Đã kết nối thành công đến Hub!');
-        setConnectionStatus('Kết nối thành công');
-      })
-      .catch((err) => {
-        console.error('Kết nối thất bại:', err);
-        setConnectionStatus('Kết nối thất bại');
-      });
-
-    return () => {
-      connection.stop();
-    };
+  useEffect( () => {
+    (async ()=>{
+      try {
+        await connection.start();
+        console.log("✅ SignalR Connected!");
+    } catch (err) {
+        console.error(err);
+    }
+    })()
   }, []);
 
   return (
